@@ -1,0 +1,155 @@
+/* Movie Card Container */
+.movie-card {
+  flex: 0 0 clamp(150px, 14vw, 190px);
+  width: clamp(150px, 14vw, 190px);
+  cursor: pointer;
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+  background-color: #181818;
+  border-radius: 6px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.movie-card:hover,
+.movie-card:focus-visible {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+  z-index: 5;
+}
+
+.movie-poster-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  background-color: #2c2c2c;
+}
+
+.movie-poster-action {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.movie-poster {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.movie-poster-fallback {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+  text-align: center;
+  background-color: #222222;
+  color: #a3a3a3;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.favourite-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.favourite-btn:hover {
+  background-color: rgba(229, 9, 20, 0.9);
+  border-color: #e50914;
+  transform: scale(1.1);
+}
+
+.favourite-btn.active {
+  background-color: #e50914;
+  border-color: #e50914;
+}
+
+.movie-info {
+  min-height: 72px;
+  padding: 10px 11px 11px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background-color: #181818;
+  flex-grow: 1;
+}
+
+.movie-info-action {
+  width: 100%;
+  border: 0;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.movie-card-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0;
+}
+
+.movie-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.75rem;
+  color: #a3a3a3;
+}
+
+.movie-year,
+.movie-rating {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.movie-rating {
+  color: #ffd700;
+  font-weight: 500;
+}
+
+.genre-movie-grid .movie-card,
+.favourites-grid .movie-card,
+.recently-viewed-grid .movie-card,
+.search-results-grid .movie-card {
+  width: 100%;
+  min-width: 0;
+  flex: none;
+}
+
+@media (max-width: 768px) {
+  .movie-card {
+    flex-basis: 145px;
+    width: 145px;
+  }
+}

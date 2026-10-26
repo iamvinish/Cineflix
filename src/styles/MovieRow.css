@@ -1,0 +1,104 @@
+.movie-row-container {
+  margin-bottom: 34px;
+  padding-left: clamp(20px, 4vw, 56px);
+}
+
+.movie-row-title {
+  font-size: clamp(1.15rem, 2vw, 1.4rem);
+  font-weight: 700;
+  color: #e5e5e5;
+  margin: 0 0 12px;
+}
+
+.movie-row-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.movie-row-list {
+  display: flex;
+  width: 100%;
+  gap: 14px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: 8px 40px 14px 0;
+  scroll-snap-type: x proximity;
+}
+
+.movie-row-list::-webkit-scrollbar {
+  display: none;
+}
+
+.row-scroll-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.75);
+  color: #ffffff;
+  border: none;
+  font-size: 2.4rem;
+  width: 44px;
+  height: 72px;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  opacity: 0;
+  pointer-events: none;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.movie-row-wrapper:hover .row-scroll-btn {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.movie-row-wrapper:focus-within .row-scroll-btn {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.row-scroll-btn:hover {
+  background-color: rgba(0, 0, 0, 0.95);
+}
+
+.row-scroll-btn.left {
+  left: 0;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+
+.row-scroll-btn.right {
+  right: 0;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+
+@media (max-width: 768px) {
+  .movie-row-container {
+    padding-left: 16px;
+  }
+  
+  .movie-row-title {
+    font-size: 1.2rem;
+  }
+
+  .row-scroll-btn {
+    display: none;
+  }
+
+  .movie-row-list {
+    gap: 12px;
+    padding-right: 16px;
+    scroll-snap-type: x mandatory;
+  }
+
+  .movie-row-list > * {
+    scroll-snap-align: start;
+  }
+}

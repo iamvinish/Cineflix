@@ -1,0 +1,109 @@
+.search-bar-form {
+  position: relative;
+  display: flex;
+  width: 100%;
+  align-items: center;
+}
+
+.search-input-wrapper {
+  position: relative;
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
+  padding: 6px 8px 6px 12px;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.search-input-wrapper:focus-within {
+  border-color: #f5c518;
+  background-color: rgba(0, 0, 0, 0.9);
+  box-shadow: 0 0 0 2px rgba(245, 197, 24, 0.25);
+}
+
+.search-input {
+  min-width: 0;
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 0.9rem;
+  outline: none;
+  width: 100%;
+}
+
+.search-input::placeholder {
+  color: #8c8c8c;
+}
+
+.search-button {
+  flex: 0 0 34px;
+  width: 34px;
+  height: 34px;
+  border-radius: 4px;
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.search-button:hover {
+  color: #f5c518;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.search-button:disabled {
+  cursor: wait;
+  color: #f5c518;
+}
+
+.search-button svg {
+  width: 19px;
+  height: 19px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.search-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: search-spin 0.7s linear infinite;
+}
+
+@keyframes search-spin {
+  to { transform: rotate(360deg); }
+}
+
+.search-validation-message {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  color: #ffb4b4;
+  font-size: 0.78rem;
+}
+
+.search-progress-message {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  color: #d2d2d2;
+  font-size: 0.78rem;
+}
+
+@media (max-width: 768px) {
+  .search-input-wrapper {
+    min-height: 40px;
+  }
+}

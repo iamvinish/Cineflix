@@ -1,0 +1,18 @@
+.cineflix-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 40vh;
+  text-align: center;
+  padding: 20px;
+  color: #e50914;
+  gap: 10px;
+}
+.cineflix-error h3 {
+  font-size: 1.5rem;
+  color: #ffffff;
+}
+.cineflix-error p {
+  color: #a3a3a3;
+}
