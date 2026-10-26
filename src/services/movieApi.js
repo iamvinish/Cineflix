@@ -3,7 +3,7 @@ const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 const BASE_URL = 'https://api.themoviedb.org/3';
 
 // Helper function to handle fetch requests and error checking
-const fetchFromTMDB = async (endpoint, params = {}) => {
+const fetchFromTMDB = async (endpoint, params = {}, { signal } = {}) => {
   if (!API_KEY || API_KEY === 'your_actual_tmdb_api_key_here') {
     throw new Error('TMDB API Key is missing or invalid. Please check your .env file.');
   }
@@ -18,7 +18,7 @@ const fetchFromTMDB = async (endpoint, params = {}) => {
     }
   });
 
-  const response = await fetch(url);
+  const response = await fetch(url, { signal });
 
   if (!response.ok) {
     throw new Error(`API Request failed with status ${response.status}`);
@@ -62,9 +62,9 @@ export const getMoviesByGenre = async (genreId, languageCode) => {
 };
 
 // 5. Search Movies by Query
-export const searchMovies = async (query) => {
+export const searchMovies = async (query, options) => {
   if (!query.trim()) return [];
-  return fetchFromTMDB('/search/movie', { query: query.trim() });
+  return fetchFromTMDB('/search/movie', { query: query.trim() }, options);
 };
 
 // 6. Get Movie Details by ID
@@ -77,7 +77,10 @@ export const getMovieDetails = async (movieId) => {
 // 7. Get Movie Cast / Credits
 export const getMovieCredits = async (movieId) => {
   const data = await fetchFromTMDB(`/movie/${movieId}/credits`);
-  return data.cast || [];
+  return {
+    cast: data.cast || [],
+    directors: (data.crew || []).filter((person) => person.job === 'Director')
+  };
 };
 
 // 8. Get Similar Movies

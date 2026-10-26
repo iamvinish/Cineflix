@@ -129,14 +129,15 @@
 
 /* Modal Body Section */
 .details-body {
-  padding: 24px 30px;
-  display: flex;
-  gap: 30px;
+  padding: clamp(14px, 2.1vw, 30px);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(96px, 16vw, 156px);
+  gap: clamp(10px, 1.7vw, 24px);
   align-items: flex-start;
 }
 
 .details-main-info {
-  flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 15px;
@@ -235,14 +236,14 @@
 .details-meta-row {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 9px 15px;
   flex-wrap: wrap;
   font-size: 0.9rem;
   font-weight: 600;
 }
 
 .details-rating {
-  color: #46d369; /* Netflix green match score color */
+  color: #46d369;
 }
 
 .details-year {
@@ -261,6 +262,12 @@
   font-size: 1rem;
   line-height: 1.6;
   color: #d2d2d2;
+}
+
+.details-overview-section h3 {
+  margin: 0 0 7px;
+  color: #fff;
+  font-size: 1rem;
 }
 
 .details-genres {
@@ -290,6 +297,17 @@
   margin: 0 0 14px;
   color: #fff;
   font-size: 1.25rem;
+}
+
+.details-director {
+  margin-bottom: 16px;
+  color: #bcbcbc;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.details-director strong {
+  color: #fff;
 }
 
 .details-cast ul {
@@ -322,17 +340,40 @@
 }
 
 .details-poster-preview {
-  width: 150px;
-  flex-shrink: 0;
-  border-radius: 4px;
+  width: 100%;
+  margin-top: clamp(10px, 2.8vw, 42px);
+  border-radius: 6px;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  background: #252525;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.42);
 }
 
 .details-poster-preview img {
   width: 100%;
-  height: auto;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
   display: block;
+}
+
+.details-poster-fallback {
+  display: flex;
+  aspect-ratio: 2 / 3;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  color: #d2d2d2;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.details-poster-fallback span {
+  font-weight: 700;
+}
+
+.details-poster-fallback small {
+  color: #a3a3a3;
 }
 
 /* Fade In Animation */
@@ -360,14 +401,8 @@
   .details-title {
     font-size: 1.6rem;
   }
-  .details-body {
-    padding: 18px;
-  }
   .details-extra-info {
     padding: 0 18px 20px;
-  }
-  .details-poster-preview {
-    display: none;
   }
 
   .details-meta-row {
@@ -380,6 +415,14 @@
 }
 
 @media (max-width: 460px) {
+  .details-trailer {
+    border-radius: 4px;
+  }
+
+  .details-meta-row {
+    font-size: 0.78rem;
+  }
+
   .details-title {
     max-width: calc(100% - 28px);
     font-size: 1.4rem;

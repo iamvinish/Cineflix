@@ -2,14 +2,18 @@ import React from 'react';
 import MovieCard from './MovieCard';
 import '../styles/Favourites.css';
 
-function Favourites({ favourites, onMovieClick, onToggleFavourite }) {
+function Favourites({ favourites, onMovieClick, onToggleFavourite, onBrowse }) {
   return (
     <div className="favourites-page">
       <h2 className="favourites-heading">My List</h2>
       {favourites.length === 0 ? (
         <div className="favourites-empty">
-          <p>Your list is currently empty.</p>
-          <span>Explore movies and click the '+' button on any poster to save them here!</span>
+          <span className="favourites-empty-icon" aria-hidden="true">+</span>
+          <h3>Your list is waiting for its first movie</h3>
+          <p>Save movies you want to watch by selecting the plus button on any poster. They’ll stay in My List on this browser.</p>
+          <button className="favourites-browse-button" type="button" onClick={onBrowse}>
+            Explore movies
+          </button>
         </div>
       ) : (
         <div className="favourites-grid">

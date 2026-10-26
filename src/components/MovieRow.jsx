@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import MovieCard from './MovieCard';
 import '../styles/MovieRow.css';
 
-function MovieRow({ title, movies, onMovieClick, favourites = [], onToggleFavourite }) {
+function MovieRow({ id, title, movies, onMovieClick, favourites = [], onToggleFavourite }) {
   const rowRef = useRef(null);
 
   const handleScroll = (direction) => {
@@ -18,7 +18,7 @@ function MovieRow({ title, movies, onMovieClick, favourites = [], onToggleFavour
   }
 
   return (
-    <div className="movie-row-container">
+    <div className="movie-row-container" id={id}>
       <h3 className="movie-row-title">{title}</h3>
       <div className="movie-row-wrapper">
         <button className="row-scroll-btn left" type="button" onClick={() => handleScroll('left')} aria-label={`Scroll ${title} left`}>

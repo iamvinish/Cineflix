@@ -19,6 +19,7 @@ function MovieDetails({
   const movieId = movie?.id;
   const [details, setDetails] = useState(null);
   const [cast, setCast] = useState([]);
+  const [directors, setDirectors] = useState([]);
   const [similarMovies, setSimilarMovies] = useState([]);
   const [loadedMovieId, setLoadedMovieId] = useState(null);
   const [loadingDetails, setLoadingDetails] = useState(true);
@@ -42,6 +43,7 @@ function MovieDetails({
       setDetailsError(null);
       setLoadedMovieId(null);
       setCast([]);
+      setDirectors([]);
       setSimilarMovies([]);
       setTrailerState({ movieId, status: 'loading' });
 
@@ -58,7 +60,10 @@ function MovieDetails({
         setDetails(movieDetails);
         setLoadedMovieId(movieId);
       }
-      if (results[1].status === 'fulfilled') setCast(results[1].value.slice(0, 8));
+      if (results[1].status === 'fulfilled') {
+        setCast(results[1].value.cast.slice(0, 8));
+        setDirectors(results[1].value.directors);
+      }
       if (results[2].status === 'fulfilled') {
         setSimilarMovies(results[2].value.filter((item) => item.id !== movieId));
       }
@@ -150,6 +155,7 @@ function MovieDetails({
     ? `https://image.tmdb.org/t/p/w500${posterPath}`
     : null;
   const releaseDate = currentDetails?.release_date || movie.release_date;
+  const releaseYear = releaseDate?.slice(0, 4);
   const genres = currentDetails?.genres || [];
   const rating = currentDetails?.vote_average ?? movie.vote_average;
   const languageCode = currentDetails?.original_language || movie.original_language;
@@ -207,7 +213,7 @@ function MovieDetails({
 
         <div className="details-body">
           <div className="details-main-info">
-            <div className="details-trailer" aria-label="Movie trailer">
+            <div className="details-trailer" role="region" aria-label={`${title} trailer`}>
               {trailer ? (
                 <YouTubeTrailer
                   key={`${movieId}-${trailer.key}`}
@@ -242,9 +248,9 @@ function MovieDetails({
 
             <div className="details-meta-row">
               <span className="details-rating">
-                ★ {rating != null ? Number(rating).toFixed(1) : 'Not rated'}
+                {rating != null ? `★ ${Number(rating).toFixed(1)} / 10` : 'Not rated'}
               </span>
-              {releaseDate && <span className="details-year">{releaseDate}</span>}
+              {releaseYear && <span className="details-year">{releaseYear}</span>}
               {languageName && <span>Original language: {languageName}</span>}
               {currentDetails?.runtime > 0 && <span>{currentDetails.runtime} min</span>}
               {currentDetails?.adult && <span className="details-badge">18+</span>}
@@ -254,35 +260,51 @@ function MovieDetails({
                 {genres.map((genre) => <span key={genre.id}>{genre.name}</span>)}
               </div>
             )}
-            <p className="details-overview">
-              {currentDetails?.overview || movie.overview || 'No overview available.'}
-            </p>
+            <section className="details-overview-section" aria-labelledby="details-overview-title">
+              <h3 id="details-overview-title">Overview</h3>
+              <p className="details-overview">
+                {currentDetails?.overview || movie.overview || 'No overview available.'}
+              </p>
+            </section>
           </div>
-          {posterUrl && failedPosterMovieId !== movieId && (
-            <div className="details-poster-preview">
+          <div className="details-poster-preview">
+            {posterUrl && failedPosterMovieId !== movieId ? (
               <img
                 src={posterUrl}
                 alt={`${title} poster`}
                 onError={() => setFailedPosterMovieId(movieId)}
               />
-            </div>
-          )}
+            ) : (
+              <div className="details-poster-fallback" role="img" aria-label={`${title} poster unavailable`}>
+                <span>{title}</span>
+                <small>Poster unavailable</small>
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="details-extra-info">
-          {loadingDetails && <p className="details-status" role="status">Loading movie details and cast...</p>}
+          {loadingDetails && <p className="details-status" role="status">Loading movie details, cast, and director...</p>}
           {detailsError && <p className="details-status" role="alert">{detailsError}</p>}
-          {cast.length > 0 && (
+          {(cast.length > 0 || directors.length > 0) && (
             <section className="details-cast">
-              <h3>Cast</h3>
-              <ul>
-                {cast.map((person) => (
-                  <li key={person.cast_id || `${person.id}-${person.character}`}>
-                    <strong>{person.name}</strong>
-                    {person.character && <span>{person.character}</span>}
-                  </li>
-                ))}
-              </ul>
+              <h3>Cast &amp; Crew</h3>
+              {directors.length > 0 && (
+                <p className="details-director">
+                  <strong>Director{directors.length > 1 ? 's' : ''}:</strong>{' '}
+                  {directors.map((person) => person.name).join(', ')}
+                </p>
+              )}
+              {cast.length > 0 && (
+                <ul>
+                  {cast.map((person) => (
+                    <li key={person.cast_id || `${person.id}-${person.character}`}>
+                      <strong>{person.name}</strong>
+                      {person.character && <span>{person.character}</span>}
+                    </li>
+                  ))}
+                </ul>
+              )}
             </section>
           )}
           {similarMovies.length > 0 && (

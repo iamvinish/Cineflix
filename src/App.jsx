@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useFavourites } from './hooks/useFavourites';
 import { useWatchHistory } from './hooks/useWatchHistory';
 import Header from './components/Header';
@@ -38,6 +38,15 @@ function App() {
   // UI state
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [favouriteFeedback, setFavouriteFeedback] = useState('');
+  const searchRequestRef = useRef(0);
+  const searchControllerRef = useRef(null);
+
+  const cancelSearch = () => {
+    searchRequestRef.current += 1;
+    searchControllerRef.current?.abort();
+    searchControllerRef.current = null;
+  };
 
   // Fetch initial home page data on component mount
   useEffect(() => {
@@ -68,23 +77,53 @@ function App() {
     fetchHomeData();
   }, []);
 
+  useEffect(() => () => {
+    searchRequestRef.current += 1;
+    searchControllerRef.current?.abort();
+  }, []);
+
+  useEffect(() => {
+    if (!favouriteFeedback) return undefined;
+    const timeoutId = window.setTimeout(() => setFavouriteFeedback(''), 2800);
+    return () => window.clearTimeout(timeoutId);
+  }, [favouriteFeedback]);
+
   // Handle Search Submission
   const handleSearch = async (query) => {
     if (!query.trim()) return;
+    cancelSearch();
+    const requestId = searchRequestRef.current;
+    const controller = new AbortController();
+    searchControllerRef.current = controller;
     setSearchQuery(query);
     setActivePage('search');
+    setSearchResults([]);
     try {
       setLoading(true);
       setError(null);
 
-      const results = await searchMovies(query);
-      setSearchResults(results);
+      const results = await searchMovies(query, { signal: controller.signal });
+      if (requestId === searchRequestRef.current) setSearchResults(results);
     } catch (err) {
-      console.error('Search failed:', err);
-      setError('Failed to fetch search results. Please try again.');
+      if (err.name !== 'AbortError' && requestId === searchRequestRef.current) {
+        console.error('Search failed:', err);
+        setError('Failed to fetch search results. Please try again.');
+      }
     } finally {
-      setLoading(false);
+      if (requestId === searchRequestRef.current) {
+        searchControllerRef.current = null;
+        setLoading(false);
+      }
     }
+  };
+
+  const handleClearSearch = () => {
+    cancelSearch();
+    if (activePage === 'search') setLoading(false);
+    setSearchQuery('');
+    setSearchResults([]);
+    setError(null);
+    setActivePage('home');
   };
 
   const openMovie = (movie) => {
@@ -92,7 +131,15 @@ function App() {
     setSelectedMovie(movie);
   };
 
-  const handleToggleFavourite = toggleFavourite;
+  const handleToggleFavourite = (movie) => {
+    const isAlreadyFavourite = favourites.some((favourite) => favourite.id === movie.id);
+    toggleFavourite(movie);
+    setFavouriteFeedback(
+      isAlreadyFavourite
+        ? `${movie.title || movie.name || 'Movie'} removed from My List`
+        : `${movie.title || movie.name || 'Movie'} added to My List`
+    );
+  };
   const heroMovie = useMemo(
     () => trending.find((movie) => movie.backdrop_path) ?? trending[0] ?? null,
     [trending]
@@ -100,12 +147,26 @@ function App() {
 
   const isSelectedFav = selectedMovie ? favourites.some((fav) => fav.id === selectedMovie.id) : false;
 
+  const handleNavigate = (page, sectionId) => {
+    cancelSearch();
+    if (activePage === 'search') setLoading(false);
+    setActivePage(page);
+    setSearchQuery('');
+    setError(null);
+    if (sectionId) {
+      window.setTimeout(() => {
+        document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
+      }, 0);
+    }
+  };
+
   return (
     <div className="app">
       <Header 
-        onNavigate={(page) => { setActivePage(page); setSearchQuery(''); setError(null); }} 
+        onNavigate={handleNavigate}
         activePage={activePage} 
         onSearch={handleSearch} 
+        onClearSearch={handleClearSearch}
       />
 
       <main>
@@ -131,6 +192,7 @@ function App() {
                   onToggleFavourite={handleToggleFavourite}
                 />
                 <MovieRow 
+                  id="popular-movies"
                   title="Popular on CineFlix" 
                   movies={popular} 
                   onMovieClick={openMovie}
@@ -145,6 +207,7 @@ function App() {
                   onToggleFavourite={handleToggleFavourite}
                 />
                 <MovieRow 
+                  id="upcoming-releases"
                   title="Upcoming Releases" 
                   movies={upcoming} 
                   onMovieClick={openMovie}
@@ -164,7 +227,10 @@ function App() {
               <section className="search-results-page">
                 <h1>Search Results for “{searchQuery}”</h1>
                 {searchResults.length === 0 ? (
-                  <p className="search-empty">No movies found matching your search.</p>
+                  <div className="search-empty" role="status">
+                    <h2>No movies found</h2>
+                    <p>We couldn’t find a match for “{searchQuery}”. Try another title or check the spelling.</p>
+                  </div>
                 ) : (
                   <div className="search-results-grid">
                     {searchResults.map((movie) => (
@@ -186,6 +252,7 @@ function App() {
                 favourites={favourites} 
                 onMovieClick={openMovie} 
                 onToggleFavourite={handleToggleFavourite} 
+                onBrowse={() => setActivePage('browse')}
               />
             )}
 
@@ -210,6 +277,13 @@ function App() {
         )}
       </main>
 
+      {favouriteFeedback && (
+        <div className="favourite-feedback" role="status" aria-live="polite">
+          <span aria-hidden="true">{favouriteFeedback.includes('added') ? '✓' : '−'}</span>
+          {favouriteFeedback}
+        </div>
+      )}
+
       {/* Movie Details Modal */}
       {selectedMovie && (
         <MovieDetails 
@@ -222,7 +296,7 @@ function App() {
         />
       )}
 
-      <Footer />
+      <Footer onNavigate={handleNavigate} />
     </div>
   );
 }

@@ -1,13 +1,14 @@
 .movie-row-container {
-  margin-bottom: 34px;
+  margin-bottom: 42px;
   padding-left: clamp(20px, 4vw, 56px);
+  overflow: hidden;
 }
 
 .movie-row-title {
   font-size: clamp(1.15rem, 2vw, 1.4rem);
   font-weight: 700;
   color: #e5e5e5;
-  margin: 0 0 12px;
+  margin: 0 0 15px;
 }
 
 .movie-row-wrapper {
@@ -20,12 +21,12 @@
 .movie-row-list {
   display: flex;
   width: 100%;
-  gap: 14px;
+  gap: 16px;
   overflow-x: auto;
   scroll-behavior: smooth;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  padding: 8px 40px 14px 0;
+  padding: 8px 40px 18px 0;
   scroll-snap-type: x proximity;
 }
 

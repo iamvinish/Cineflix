@@ -2,7 +2,7 @@ import React from 'react';
 import SearchBar from './SearchBar';
 import '../styles/Header.css';
 
-function Header({ onNavigate, activePage, onSearch }) {
+function Header({ onNavigate, activePage, onSearch, onClearSearch }) {
   return (
     <header className="header">
       <div className="header-left">
@@ -47,7 +47,7 @@ function Header({ onNavigate, activePage, onSearch }) {
       </div>
 
       <div className="header-right">
-        <SearchBar onSearch={onSearch} />
+        <SearchBar onSearch={onSearch} onClear={onClearSearch} />
       </div>
     </header>
   );

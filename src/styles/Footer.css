@@ -1,47 +1,130 @@
 .cineflix-footer {
-  background-color: #141414;
-  color: #737373;
-  padding: 28px clamp(16px, 4vw, 56px) 36px;
-  border-top: 1px solid #222222;
+  width: 100%;
+  background: #000000;
+  color: #808080;
+  padding: 56px clamp(20px, 6vw, 72px) 32px;
 }
 
 .footer-content {
-  max-width: 1600px;
+  width: 100%;
+  max-width: 1080px;
   margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px 32px;
+  font-size: 0.875rem;
+}
+
+.footer-contact {
+  margin-bottom: 34px;
+  line-height: 1.6;
+}
+
+.footer-link-columns {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 32px;
+}
+
+.footer-link-group {
+  min-width: 0;
+}
+
+.footer-link-group h2 {
+  margin: 0 0 14px;
+  color: #dedede;
   font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0;
 }
 
-.footer-links {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: 12px 24px;
+.footer-link-group ul {
+  display: grid;
+  gap: 12px;
+  padding: 0;
+  list-style: none;
 }
 
-.footer-links a {
-  color: #737373;
+.footer-link-group a,
+.footer-link-group button,
+.footer-contact a,
+.footer-attribution a {
+  color: #808080;
+  font: inherit;
+  line-height: 1.5;
+  text-align: left;
   text-decoration: none;
-  transition: color 0.2s ease;
+  overflow-wrap: anywhere;
+  transition: color 0.2s ease, text-decoration-color 0.2s ease;
 }
 
-.footer-links a:hover {
+.footer-link-group button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.footer-link-group a:hover,
+.footer-link-group button:hover,
+.footer-contact a:hover,
+.footer-attribution a:hover {
   color: #ffffff;
   text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
-@media (max-width: 680px) {
-  .footer-content {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 14px;
+.footer-brand {
+  margin-top: 48px;
+}
+
+.footer-wordmark {
+  color: #e50914;
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.footer-brand p {
+  margin-top: 5px;
+  color: #a0a0a0;
+}
+
+.footer-attribution {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 20px;
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid #292929;
+  font-size: 0.78rem;
+  line-height: 1.6;
+}
+
+@media (max-width: 760px) {
+  .cineflix-footer {
+    padding-top: 44px;
   }
 
-  .footer-links {
-    justify-content: flex-start;
-    gap: 10px 18px;
+  .footer-link-columns {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px 24px;
+  }
+}
+
+@media (max-width: 420px) {
+  .cineflix-footer {
+    padding: 36px 20px 26px;
+  }
+
+  .footer-contact {
+    margin-bottom: 28px;
+  }
+
+  .footer-link-columns {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+  }
+
+  .footer-brand {
+    margin-top: 36px;
   }
 }
